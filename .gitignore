@@ -1,0 +1,30 @@
+# Compiled binaries
+mesh_client
+*.exe
+*.out
+*.o
+*.a
+*.so
+
+# Build directories
+build/
+cmake-build-*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+env/
+venv/
+
+# Editor
+*.swp
+*.swo
+.vscode/
+.idea/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
