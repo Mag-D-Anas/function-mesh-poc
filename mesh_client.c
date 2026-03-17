@@ -1,4 +1,3 @@
-
 #include <metacall/metacall.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -381,7 +380,7 @@ static int test_shutdown_mid_transfer(void)
 	metacall_destroy();
 	metacall_initialize();
 
-	const char *scripts[] = { "mesh_server.url" };
+	const char *scripts[] = { "client/hub.url" };
 	if (metacall_load_from_file("rpc", scripts, 1, NULL) != 0)
 	{
 		printf("    Could not reconnect to server\n");
@@ -434,7 +433,7 @@ static int test_empty_shutdown(void)
 	// Re-initialize to prove everything is still okay
 	metacall_initialize();
 
-	const char *scripts[] = { "mesh_server.url" };
+	const char *scripts[] = { "client/hub.url" };
 	if (metacall_load_from_file("rpc", scripts, 1, NULL) != 0)
 	{
 		printf("    Could not reconnect after empty shutdown\n");
@@ -467,11 +466,11 @@ int main(void)
 
 	metacall_initialize();
 
-	const char *scripts[] = { "mesh_server.url" };
+	const char *scripts[] = { "client/hub.url" };
 
 	if (metacall_load_from_file("rpc", scripts, 1, NULL) != 0)
 	{
-		printf("FATAL: Failed to load RPC script. Is mesh_server.py running?\n");
+		printf("FATAL: Failed to load RPC script. Is the server accessible via the URL in client/hub.url?\n");
 		metacall_destroy();
 		return 1;
 	}

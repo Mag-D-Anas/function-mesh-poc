@@ -1,0 +1,56 @@
+services:
+  routing-hub:
+    build:
+      context: ./services/routing_hub_cpp
+    container_name: routing-hub
+    ports:
+      - "${HUB_PORT:-8080}:8080"
+    environment:
+      HUB_TIMEOUT_MS: "${HUB_TIMEOUT_MS:-1200}"
+      HUB_RETRY_COUNT: "${HUB_RETRY_COUNT:-1}"
+      WORKER_A_URL: "http://worker-a:7777"
+      WORKER_B_URL: "http://worker-b:7778"
+      WORKER_C_URL: "http://worker-c:7779"
+    depends_on:
+      - worker-a
+      - worker-b
+      - worker-c
+
+  worker-a:
+    build:
+      context: ./services/worker_a_py
+    container_name: worker-a
+    ports:
+      - "${WORKER_A_PORT:-7777}:7777"
+    environment:
+      PORT: "7777"
+      WORKER_NAME: "worker-a"
+      ENABLE_ADD: "1"
+      ENABLE_MULTIPLY: "1"
+      ENABLE_SLOW_ADD: "0"
+
+  worker-b:
+    build:
+      context: ./services/worker_b_py
+    container_name: worker-b
+    ports:
+      - "${WORKER_B_PORT:-7778}:7778"
+    environment:
+      PORT: "7778"
+      WORKER_NAME: "worker-b"
+      ENABLE_ADD: "1"
+      ENABLE_MULTIPLY: "0"
+      ENABLE_SLOW_ADD: "1"
+
+  worker-c:
+    build:
+      context: ./services/worker_c_py
+    container_name: worker-c
+    ports:
+      - "${WORKER_C_PORT:-7779}:7779"
+    environment:
+      PORT: "7779"
+      WORKER_NAME: "worker-c"
+      ENABLE_ADD: "1"
+      ENABLE_MULTIPLY: "1"
+      ENABLE_SLOW_ADD: "1"

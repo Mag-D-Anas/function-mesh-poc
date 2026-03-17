@@ -9,7 +9,6 @@ mesh_client
 # Build directories
 build/
 cmake-build-*/
-
 # Python
 __pycache__/
 *.pyc
@@ -17,6 +16,7 @@ __pycache__/
 .Python
 env/
 venv/
+.env
 
 # Editor
 *.swp
