@@ -6,11 +6,11 @@ services:
     ports:
       - "${HUB_PORT:-8080}:8080"
     environment:
-      HUB_TIMEOUT_MS: "${HUB_TIMEOUT_MS:-1200}"
-      HUB_RETRY_COUNT: "${HUB_RETRY_COUNT:-1}"
       WORKER_A_URL: "http://worker-a:7777"
       WORKER_B_URL: "http://worker-b:7778"
       WORKER_C_URL: "http://worker-c:7779"
+      LOADER_LIBRARY_PATH: "/usr/local/lib"
+      SERIAL_LIBRARY_PATH: "/usr/local/lib"
     depends_on:
       - worker-a
       - worker-b

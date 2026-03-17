@@ -3,9 +3,9 @@
 
 #include <sstream>
 
-void Registry::add(const std::string &function_name, const std::string &base_url, bool async_flag)
+void Registry::add(const std::string &function_name, void *handle, bool async_flag)
 {
-	function_backends_[function_name].push_back(base_url);
+	function_handles_[function_name].push_back(handle);
 	function_async_[function_name] = async_flag;
 
 	if (rr_index_.find(function_name) == rr_index_.end())
@@ -14,12 +14,12 @@ void Registry::add(const std::string &function_name, const std::string &base_url
 	}
 }
 
-std::string Registry::next_backend(const std::string &function_name)
+void *Registry::next_handle(const std::string &function_name)
 {
-	auto it = function_backends_.find(function_name);
-	if (it == function_backends_.end() || it->second.empty())
+	auto it = function_handles_.find(function_name);
+	if (it == function_handles_.end() || it->second.empty())
 	{
-		return "";
+		return nullptr;
 	}
 
 	size_t idx = rr_index_[function_name];
@@ -28,9 +28,20 @@ std::string Registry::next_backend(const std::string &function_name)
 		idx = 0;
 	}
 
-	std::string selected = it->second[idx];
+	void *selected = it->second[idx];
 	rr_index_[function_name] = next_round_robin_index(idx, it->second.size());
 	return selected;
+}
+
+bool Registry::has_function(const std::string &function_name) const
+{
+	return function_handles_.find(function_name) != function_handles_.end();
+}
+
+bool Registry::is_async(const std::string &function_name) const
+{
+	auto it = function_async_.find(function_name);
+	return it != function_async_.end() && it->second;
 }
 
 std::string Registry::inspect_payload() const
@@ -39,7 +50,7 @@ std::string Registry::inspect_payload() const
 	oss << "{\"py\":[{\"name\":\"routing_hub.py\",\"scope\":{\"name\":\"global_namespace\",\"funcs\":[";
 
 	bool first = true;
-	for (const auto &entry : function_backends_)
+	for (const auto &entry : function_handles_)
 	{
 		const std::string &name = entry.first;
 		bool async_flag = false;

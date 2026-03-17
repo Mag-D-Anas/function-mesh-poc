@@ -12,11 +12,10 @@ struct RouteResult {
 
 class Router {
 public:
-	Router(Registry &registry, long timeout_ms, int retry_count);
+	Router(Registry &registry, void *allocator);
 	RouteResult handle(const std::string &method, const std::string &path, const std::string &body);
 
 private:
 	Registry &registry_;
-	long timeout_ms_;
-	int retry_count_;
+	void *allocator_;
 };
